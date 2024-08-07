@@ -17,20 +17,30 @@
 #include <stdio.h>
 #pragma warning(disable: 4996)
 
+#define R1_RADIUS 5.5
+#define R2_RADIUS 10.5
+#define S1_LEN 5
+#define S2_LEN 12
+
 int main(void) {
-    Circle round1("red", 5.5);
-    Circle round2("blue", 10.5);
+    Circle round1("red", R1_RADIUS);
+    Circle round2("blue", R2_RADIUS);
     Circle playARound;//instantiate with default value
 
-    Square square1("orange", 5);
-    Square square2("purple", 12);
+    Square square1("orange", S1_LEN);
+    Square square2("purple", S2_LEN);
     Square playASquare;
 
     playARound = round1.operator+(round2);
-    playARound.Show();
+    playASquare = square2.operator+(square1);
+    playARound.Show(); //printing after both additions just because that was the order stated in requirements
+    playASquare.Show();
 
     playARound = round1.operator*(round2);
+    playASquare = square2.operator*(square1);
     playARound.Show();
+    playASquare.Show();
+
 
     playARound = round1;
     if (playARound == round1) {

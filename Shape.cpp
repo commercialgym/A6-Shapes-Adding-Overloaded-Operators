@@ -64,6 +64,17 @@ string Shape::GetColour(void) const{//change to const to use GetColour() in over
 }
 
 /**
+ * @brief Accessor for the colour of the shape.
+ *
+ * @return The colour of the shape.
+ *
+ * @details This method safely returns the value of the colour by utilizing the string class, returning the colour of the object.
+ */
+string Shape::GetColour(void) {
+    return colour;
+}
+
+/**
  * @brief Mutator for setting the name of the shape.
  *
  * @param newName The new name of the shape.

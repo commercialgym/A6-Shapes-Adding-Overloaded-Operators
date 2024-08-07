@@ -71,6 +71,18 @@ float Circle::GetRadius(void) {
 }
 
 /**
+ * @brief Const accessor for the radius of the circle.
+ *
+ * @return The radius of the circle.
+ *
+ * @details This overloaded method returns the radius data member, used for overloaded operators when using best practices,
+ * allows the const variable to still access this method
+ */
+float Circle::GetRadius(void) const{
+    return radius;
+}
+
+/**
  * @brief Mutator for setting the radius of the circle.
  *
  * @param newRadius The new radius of the circle.
@@ -135,28 +147,79 @@ float Circle::OverallDimension(void) {
     return FIXED_NUM * radius;
 }
 
+/**
+* @brief Overloaded addition operator
+* 
+* @param const Circle& op2 : another Circle object to be added to the current Circle object, passed by reference
+* 
+* @return The resulting circle object after adding 2 circles together, which is returned by value by passing a
+* copy of the local variable created within this method
+* 
+* @details When adding two circles, the resultant will take the colour of the circle on the LHS and 
+* the radius will be the sum of the LHS and RHS operand's radii. Follows best practices by using const accessors
+*/
 Circle Circle::operator+(const Circle& op2) {
     Circle temp; 
     temp.SetColour(this->GetColour());
-    temp.radius = this->radius + op2.radius;
+    temp.SetRadius(this->GetRadius() + op2.GetRadius());
     return temp;
 }
 
+/**
+* @brief Overloaded multiplication operator
+*
+* @param const Circle& op2 : another Circle object to be multiplied by the current Circle object, passed by reference
+* 
+* @return The resulting circle object after multiplying 2 circles together, which is returned by value by passing a
+* copy of the local variable created within this method
+* 
+* @details The resultant of multiplying two circle object together takes the colour of the circle on the RHS, and it's
+* radius is the product of the LHS and RHS operand's radii. Follows best practices by using const accessors
+*/
 Circle Circle::operator*(const Circle& op2) {
     Circle temp;
     temp.SetColour(op2.GetColour());
-    temp.radius = this->radius * op2.radius;
+    temp.SetRadius(this->GetRadius() + op2.GetRadius());
     return temp;
 }
 
+/**
+* @brief Overloaded assignment operator
+*
+* @param const Circle& op2 : another Circle object whose values will be used to assign to the current circle's, passed by reference
+*
+* @return A const reference to the current object
+*
+* @details Accesses the RHS Circle's attributes and assigns it to the current Circle's attributes/data members, this includes the 
+* colour and the radius. Follows best practices by using const accessors
+*/
 const Circle& Circle::operator=(const Circle& op2) {//----------slide 14
     this->SetColour(op2.GetColour());
-    this->radius = op2.radius;
+    this->SetRadius(op2.GetRadius());
     return *this;
 }
 
-bool Circle::operator==(const Circle& op2) {//----------slide 22
-    if (this->GetColour() == op2.GetColour() && this->radius == op2.radius) {
+/**
+* @brief Overloaded equal comparison operator 
+*
+* @param const Circle& op2 : another Circle object that will be compared to the current Circle, passed by reference
+*
+* @return A boolean value indicating whether or not the two Circles are equal (true or false)
+*
+* @details Compares the colour as well as the radius of both the circles to see if they are equal in value, if they are the method 
+* returns true. Since radius value is represented by float data-type, the operand's radii are compared to see if the they are
+* approximately equal (with small variance). Follows best practices by using const accessors. Is of type const to promise the compiler
+* that the overloaded operator will not change the operands
+*/
+bool Circle::operator==(const Circle& op2) const{//----------slide 22
+    float approxEqual = kSmallDiff; //a small variance between obj1 and obj2 is allowed up to this value (0.00001)
+    float precisionDiff = this->GetRadius() - op2.GetRadius();
+    if (precisionDiff < IS_EQUAL)
+    {
+        precisionDiff = -precisionDiff; //find absolute value to compare to approxEqual variable
+    }
+    //if the difference between LHS and RHS radii is less than approxEqual variable, means they are essentially equal
+    if (this->GetColour() == op2.GetColour() && precisionDiff < approxEqual) {
         return true;
     }
     else {

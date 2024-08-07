@@ -71,6 +71,17 @@ float Square::GetSideLength(void) {
 }
 
 /**
+ * @brief Const accessor for the side length of the square.
+ *
+ * @return The side length of the square.
+ * 
+ * @details Used for overloaded operators, this method allows the const variable to still be able to use the GetSideLength() functionality
+ */
+float Square::GetSideLength(void) const{
+    return sideLength;
+}
+
+/**
  * @brief Mutator for setting the side length of the square.
  *
  * @param newSideLength The new side length of the square.
@@ -125,4 +136,85 @@ float Square::Area(void) {
  */
 float Square::OverallDimension(void) {
     return sideLength;
+}
+
+
+/**
+* @brief Overloaded addition operator
+* 
+* @param const Square& op2 : another Square object to be added to the current Square object, passed by reference
+* 
+* @return The resulting Square object after adding 2 squares together, which is returned by value by passing a
+* copy of the local variable created within this method
+* 
+* @details After adding 2 squares, the resultant will take the colour of the LHS operand, and the sidelength will be the
+* sum of the LHS and RHS operands. Follows best practices by using const accessors
+*/
+Square Square::operator+(const Square& op2) {
+    Square temp;
+    temp.SetColour(this->GetColour());
+    temp.SetSideLength(this->GetSideLength() + op2.GetSideLength());
+    return temp;
+}
+
+/**
+* @brief Overloaded multiplication operator
+*
+* @param const Square& op2 : another Square object to be multiplied with the current Square object, passed by reference
+*
+* @return The resulting Square object after multiplying 2 squares together, which is returned by value by passing a
+* copy of the local variable created within this method
+*
+* @details After multiplying one Square by another, the resultant Square object will take the colour of the RHS operand, and
+* the sidelength will be product of the LHS and RHS operands' sidelength. Follows best practices by using const accessors
+*/
+Square Square::operator*(const Square& op2) {
+    Square temp;
+    temp.SetColour(op2.GetColour());
+    temp.SetSideLength(this->GetSideLength() * op2.GetSideLength());
+    return temp;
+}
+
+/**
+* @brief Overloaded assignment operator
+*
+* @param const Square& op2 : another Square object whose values will be used to assign to the current Square, passed by reference
+*
+* @return A const reference to the current object
+*
+* @details Accesses the RHS Square's attributes and assigns it to the current Square's attributes/data members, this includes the 
+* colour and the sidelength. Follows best practices by using const accessors
+*/
+const Square& Square::operator=(const Square& op2) {
+    this->SetColour(op2.GetColour());
+    this->SetSideLength(op2.GetSideLength());
+    return *this;
+}
+
+/**
+* @brief Overloaded equal comparison operator
+*
+* @param const Square& op2 : a Square object that will be compared to the current Square object, passed by reference
+*
+* @return A boolean value indicating whether or not the two Squares are equal (true or false)
+*
+* @details  Compares the colour as well as the sideLength of the Squares to see if they are equal in value, if they are the method 
+* returns true. Since sideLength value is represented by float data-type, the operand's sideLength are compared to see if the they are
+* approximately equal (with small variance). Follows best practices by using const accessors. Is of type const to promise the compiler
+* that the overloaded operator will not change the operands
+*/
+bool Square::operator==(const Square& op2) const {
+    float approxEqual = kSmallDiff; //a small variance between obj1 and obj2 is allowed up to this value (0.00001)
+    float precisionDiff = this->GetSideLength() - op2.GetSideLength();
+    if (precisionDiff < IS_EQUAL)
+    {
+        precisionDiff = -precisionDiff; //find absolute value to compare to approxEqual variable
+    }
+    //if the difference between LHS and RHS sideLength is less than approxEqual variable, it means they are essentially equal
+    if (this->GetColour() == op2.GetColour() && precisionDiff < approxEqual) {
+        return true;
+    }
+    else {
+        return false;
+    }
 }

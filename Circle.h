@@ -7,10 +7,12 @@
  * @programmers Alexia Tu, Hyungseop Lee
  *
  * @details This class is a child class of Shape that inherits publicly, adding one extra data member which holds the radius.
- * It has 9 methods and, unlike the parent class, has 2 constructors since this class will actually be instantiated
+ * It has 14 methods and, unlike the parent class, has 2 constructors since this class will actually be instantiated
  * in the test harness. There are additional instantiation cases that need to be accounted for. In the test
  * harness, this class is used to hold user input and manipulate the data according to the formulae of a circle,
  * which can then be used to inform the user of the particular mathematical measurements of their input.
+ * UPDATE: added 4 overloaded operators and also added a const method for GetRadius to allow object parameters passed by 
+ * reference to still be able to use the functionality of the accessor methods
  */
 
 #pragma once
@@ -18,9 +20,12 @@
 #define CIRCLE_H
 
 #include "Shape.h"
+#pragma warning(disable: 4305)
 
 #define FIXED_NUM 2
-#define PIE 3.1415926
+#define PIE 3.1415926 /** Used in arhithmetic to find radius */
+#define IS_EQUAL 0 /** Used to compare values within overloaded operator */
+const float kSmallDiff = 0.00001; /** Used for determining if radius/sidelength are equal in overloaded operators */
 
  /**
   * @class Circle
@@ -62,6 +67,13 @@ public:
      * @return The radius of the circle.
      */
     float GetRadius(void);
+    
+    /**
+     * @brief Const accessor for the radius of the circle.
+     *
+     * @return The radius of the circle.
+     */
+    float GetRadius(void) const;
 
     /**
      * @brief Mutator for setting the radius of the circle.
@@ -97,11 +109,13 @@ public:
      */
     virtual float OverallDimension(void);
 
-    //overloaded operators
+    /** 
+    * @brief Overloaded Operators
+    */
     Circle operator+(const Circle& op2);
     Circle operator*(const Circle& op2);
     const Circle& operator=(const Circle& op2);
-    bool operator==(const Circle& op2);
+    bool operator==(const Circle& op2) const; //promises to not change operands
 
 };
 

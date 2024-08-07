@@ -7,7 +7,7 @@
  * @programmer Alexia Tu, Hyungseop Lee
  *
  * @details This class is an abstract base class that will be used for the Circle and Square classes. It has two data
- * members and 7 methods. Its constructors will also be used by its subclasses' constructors by chaining them
+ * members and 9 methods. Its constructors will also be used by its subclasses' constructors by chaining them
  * together. This project is and class is the first time we implement the use of pure virtual functions. This is also
  * the first time that we don't have a destructor for a class that we created constructors for. This is because no objects of
  * the Shape class will be instantiated.
@@ -56,10 +56,15 @@ public:
      */
     string GetName(void);
 
-    /** @brief Gets the colour of the shape.
+    /** @brief Const accessor, Gets the colour of the shape.
      * @return The colour of the shape.
      */
     string GetColour(void) const;
+
+    /** @brief Gets the colour of the shape.
+     * @return The colour of the shape.
+     */
+    string GetColour(void); //need to overload
 
     /**
      * @brief Sets the name of the shape.
