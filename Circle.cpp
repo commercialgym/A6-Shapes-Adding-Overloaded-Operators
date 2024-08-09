@@ -51,6 +51,21 @@ Circle::Circle(float newRadius) : Shape("Circle", "undefined") {
 }
 
 /**
+ * @brief Copt constructor for the Circle class.
+ *
+ * @param Const reference to the object that will be copied from
+ *
+ * @details Used in overloaded operators that returns an object variable by value or during an assignment statement.
+ * Technically not NEEDed because there is no dynamically allocated space for the members of this class, however best
+ * practices state that if you have any of the following: a copy constructor, overloaded assignment operator, or destructor,
+ * then you should create all three of them. In this function it assigns the radius of the object parameter to the object 
+ * being created.
+ */
+Circle::Circle(const Circle& orig) : Shape("Circle", orig.GetColour()) {
+    radius = orig.radius;
+}
+
+/**
  * @brief Destructor for the Circle class.
  *
  * @details Destroys the object and prints a message for output.
@@ -78,7 +93,7 @@ float Circle::GetRadius(void) {
  * @details This overloaded method returns the radius data member, used for overloaded operators when using best practices,
  * allows the const variable to still access this method
  */
-float Circle::GetRadius(void) const{
+float Circle::GetRadius(void) const {
     return radius;
 }
 
@@ -149,19 +164,20 @@ float Circle::OverallDimension(void) {
 
 /**
 * @brief Overloaded addition operator
-* 
+*
 * @param const Circle& op2 : another Circle object to be added to the current Circle object, passed by reference
-* 
+*
 * @return The resulting circle object after adding 2 circles together, which is returned by value by passing a
 * copy of the local variable created within this method
-* 
-* @details When adding two circles, the resultant will take the colour of the circle on the LHS and 
-* the radius will be the sum of the LHS and RHS operand's radii. Follows best practices by using const accessors
+*
+* @details When adding two circles, the resultant will take the colour of the circle on the LHS and
+* the radius will be the sum of the LHS and RHS operand's radii. Follows best practices by using const accessors.
+* Since it returns an object by value, it requires a copy constructor.
 */
 Circle Circle::operator+(const Circle& op2) {
-    Circle temp; 
-    temp.SetColour(this->GetColour());
-    temp.SetRadius(this->GetRadius() + op2.GetRadius());
+    Circle temp(this->GetColour(), this->GetRadius() + op2.GetRadius());
+    //temp.SetColour(this->GetColour());
+    //temp.SetRadius(this->GetRadius() + op2.GetRadius());
     return temp;
 }
 
@@ -169,17 +185,18 @@ Circle Circle::operator+(const Circle& op2) {
 * @brief Overloaded multiplication operator
 *
 * @param const Circle& op2 : another Circle object to be multiplied by the current Circle object, passed by reference
-* 
+*
 * @return The resulting circle object after multiplying 2 circles together, which is returned by value by passing a
 * copy of the local variable created within this method
-* 
+*
 * @details The resultant of multiplying two circle object together takes the colour of the circle on the RHS, and it's
-* radius is the product of the LHS and RHS operand's radii. Follows best practices by using const accessors
+* radius is the product of the LHS and RHS operand's radii. Follows best practices by using const accessors.
+* Since it returns an object by value, it requires a copy constructor.
 */
 Circle Circle::operator*(const Circle& op2) {
-    Circle temp;
-    temp.SetColour(op2.GetColour());
-    temp.SetRadius(this->GetRadius() + op2.GetRadius());
+    Circle temp(op2.GetColour(), this->GetRadius() * op2.GetRadius());
+    //temp.SetColour(op2.GetColour());
+    //temp.SetRadius(this->GetRadius() * op2.GetRadius());
     return temp;
 }
 
@@ -190,28 +207,32 @@ Circle Circle::operator*(const Circle& op2) {
 *
 * @return A const reference to the current object
 *
-* @details Accesses the RHS Circle's attributes and assigns it to the current Circle's attributes/data members, this includes the 
+* @details Accesses the RHS Circle's attributes and assigns it to the current Circle's attributes/data members, this includes the
 * colour and the radius. Follows best practices by using const accessors
 */
 const Circle& Circle::operator=(const Circle& op2) {//----------slide 14
-    this->SetColour(op2.GetColour());
-    this->SetRadius(op2.GetRadius());
+    //check to see if the object is being assigned to itself
+    if (this != &op2)
+    {
+        this->SetColour(op2.GetColour());
+        this->SetRadius(op2.GetRadius());
+    }
     return *this;
 }
 
 /**
-* @brief Overloaded equal comparison operator 
+* @brief Overloaded equal comparison operator
 *
 * @param const Circle& op2 : another Circle object that will be compared to the current Circle, passed by reference
 *
 * @return A boolean value indicating whether or not the two Circles are equal (true or false)
 *
-* @details Compares the colour as well as the radius of both the circles to see if they are equal in value, if they are the method 
+* @details Compares the colour as well as the radius of both the circles to see if they are equal in value, if they are the method
 * returns true. Since radius value is represented by float data-type, the operand's radii are compared to see if the they are
 * approximately equal (with small variance). Follows best practices by using const accessors. Is of type const to promise the compiler
 * that the overloaded operator will not change the operands
 */
-bool Circle::operator==(const Circle& op2) const{//----------slide 22
+bool Circle::operator==(const Circle& op2) const {//----------slide 22
     float approxEqual = kSmallDiff; //a small variance between obj1 and obj2 is allowed up to this value (0.00001)
     float precisionDiff = this->GetRadius() - op2.GetRadius();
     if (precisionDiff < IS_EQUAL)

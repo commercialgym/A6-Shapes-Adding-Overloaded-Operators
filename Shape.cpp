@@ -10,7 +10,7 @@
  * and 2 mutators.
  */
 
-#include "shape.h"
+#include "Shape.h"
 
  /**
   * @brief Constructor for the Shape class.
@@ -59,7 +59,7 @@ string Shape::GetName(void) {
  *
  * @details This method safely returns the value of the colour by utilizing the string class, returning the colour of the object.
  */
-string Shape::GetColour(void) const{//change to const to use GetColour() in overloading operation
+string Shape::GetColour(void) const {//change to const to use GetColour() in overloading operation
     return colour;
 }
 

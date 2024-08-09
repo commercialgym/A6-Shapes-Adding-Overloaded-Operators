@@ -53,6 +53,21 @@ Square::Square(float newSideLength) : Shape("Square", "undefined") {
 }
 
 /**
+ * @brief Copt constructor for the Square class.
+ *
+ * @param Const reference to the object that will be copied from
+ *
+ * @details Used in overloaded operators that returns an object variable by value or during an assignment statement. 
+ * Technically not NEEDed because there is no dynamically allocated space for the members of this class, however best 
+ * practices state that if you have any of the following: a copy constructor, overloaded assignment operator, or destructor,
+ * then you should create all three of them. Assigns the side length of the orig object to the new object being created.
+ */
+Square::Square(const Square& orig) : Shape("Square", orig.GetColour()) {
+    //copy side length from the original to the new data member
+    sideLength = orig.sideLength;
+}
+
+/**
  * @brief Destructor for the Square class.
  *
  * @details Destroys an object of Square once it has gone out of scope and prints a message.
@@ -74,10 +89,10 @@ float Square::GetSideLength(void) {
  * @brief Const accessor for the side length of the square.
  *
  * @return The side length of the square.
- * 
+ *
  * @details Used for overloaded operators, this method allows the const variable to still be able to use the GetSideLength() functionality
  */
-float Square::GetSideLength(void) const{
+float Square::GetSideLength(void) const {
     return sideLength;
 }
 
@@ -141,20 +156,20 @@ float Square::OverallDimension(void) {
 
 /**
 * @brief Overloaded addition operator
-* 
+*
 * @param const Square& op2 : another Square object to be added to the current Square object, passed by reference
-* 
+*
 * @return The resulting Square object after adding 2 squares together, which is returned by value by passing a
 * copy of the local variable created within this method
-* 
+*
 * @details After adding 2 squares, the resultant will take the colour of the LHS operand, and the sidelength will be the
 * sum of the LHS and RHS operands. Follows best practices by using const accessors
 */
-Square Square::operator+(const Square& op2) {
-    Square temp;
-    temp.SetColour(this->GetColour());
-    temp.SetSideLength(this->GetSideLength() + op2.GetSideLength());
-    return temp;
+Square Square::operator+(const Square& op2) { 
+    Square temp(this->GetColour(), this->GetSideLength() + op2.GetSideLength()); //addition for sideLength
+    //temp.SetColour(this->GetColour());
+    //temp.SetSideLength(this->GetSideLength() + op2.GetSideLength());
+    return temp; //copy constructor called....
 }
 
 /**
@@ -169,9 +184,9 @@ Square Square::operator+(const Square& op2) {
 * the sidelength will be product of the LHS and RHS operands' sidelength. Follows best practices by using const accessors
 */
 Square Square::operator*(const Square& op2) {
-    Square temp;
-    temp.SetColour(op2.GetColour());
-    temp.SetSideLength(this->GetSideLength() * op2.GetSideLength());
+    Square temp(op2.GetColour(), this->GetSideLength() * op2.GetSideLength());
+    //temp.SetColour(op2.GetColour());
+    //temp.SetSideLength(this->GetSideLength() * op2.GetSideLength());
     return temp;
 }
 
@@ -182,12 +197,16 @@ Square Square::operator*(const Square& op2) {
 *
 * @return A const reference to the current object
 *
-* @details Accesses the RHS Square's attributes and assigns it to the current Square's attributes/data members, this includes the 
+* @details Accesses the RHS Square's attributes and assigns it to the current Square's attributes/data members, this includes the
 * colour and the sidelength. Follows best practices by using const accessors
 */
 const Square& Square::operator=(const Square& op2) {
-    this->SetColour(op2.GetColour());
-    this->SetSideLength(op2.GetSideLength());
+    //check to see if the object is being assigned to itself
+    if (this != &op2) 
+    {
+        this->SetColour(op2.GetColour());
+        this->SetSideLength(op2.GetSideLength());
+    }
     return *this;
 }
 
@@ -198,15 +217,15 @@ const Square& Square::operator=(const Square& op2) {
 *
 * @return A boolean value indicating whether or not the two Squares are equal (true or false)
 *
-* @details  Compares the colour as well as the sideLength of the Squares to see if they are equal in value, if they are the method 
+* @details  Compares the colour as well as the sideLength of the Squares to see if they are equal in value, if they are the method
 * returns true. Since sideLength value is represented by float data-type, the operand's sideLength are compared to see if the they are
 * approximately equal (with small variance). Follows best practices by using const accessors. Is of type const to promise the compiler
 * that the overloaded operator will not change the operands
 */
 bool Square::operator==(const Square& op2) const {
-    float approxEqual = kSmallDiff; //a small variance between obj1 and obj2 is allowed up to this value (0.00001)
+    float approxEqual = kPrecision; //a small variance between obj1 and obj2 is allowed up to this value (0.00001)
     float precisionDiff = this->GetSideLength() - op2.GetSideLength();
-    if (precisionDiff < IS_EQUAL)
+    if (precisionDiff < IS_EQUAL) //if the difference between the object's length is negative,
     {
         precisionDiff = -precisionDiff; //find absolute value to compare to approxEqual variable
     }

@@ -11,7 +11,7 @@
  * in the test harness. There are additional instantiation cases that need to be accounted for. In the test
  * harness, this class is used to hold user input and manipulate the data according to the formulae of a circle,
  * which can then be used to inform the user of the particular mathematical measurements of their input.
- * UPDATE: added 4 overloaded operators and also added a const method for GetRadius to allow object parameters passed by 
+ * UPDATE: added 4 overloaded operators and also added a const method for GetRadius to allow object parameters passed by
  * reference to still be able to use the functionality of the accessor methods
  */
 
@@ -53,6 +53,13 @@ public:
      * @param newRadius Radius of the circle. Defaults to 0.00.
      */
     Circle(float newRadius = 0.00);
+    
+    /**
+     * @brief Copy constructor constructor.
+     *
+     * @param Const reference to the object that will be copied from
+     */
+    Circle(const Circle& orig);
 
     /**
      * @brief Virtual destructor.
@@ -67,7 +74,7 @@ public:
      * @return The radius of the circle.
      */
     float GetRadius(void);
-    
+
     /**
      * @brief Const accessor for the radius of the circle.
      *
@@ -109,7 +116,7 @@ public:
      */
     virtual float OverallDimension(void);
 
-    /** 
+    /**
     * @brief Overloaded Operators
     */
     Circle operator+(const Circle& op2);
